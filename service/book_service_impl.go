@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"golang_crud/exception"
 	"golang_crud/model/domain"
 	"golang_crud/model/web"
 	"golang_crud/repository"
@@ -54,7 +55,7 @@ func (service *BookServiceImpl) Update(ctx context.Context, request web.UpdateBo
 
 	_, err = service.Repository.FindById(ctx, request.IdBook)
 	if err != nil {
-		return web.BookResponse{}, err
+		return web.BookResponse{}, &exception.NotFoundErr{ErrMessage: "404 Not Found"}
 	}
 
 	bookDomain := domain.Book{
@@ -80,7 +81,7 @@ func (service *BookServiceImpl) Update(ctx context.Context, request web.UpdateBo
 func (service *BookServiceImpl) Delete(ctx context.Context, bookId int) error {
 	_, err := service.Repository.FindById(ctx, bookId)
 	if err != nil {
-		return err
+		return &exception.NotFoundErr{ErrMessage: "404 Not Found"}
 	}
 
 	err = service.Repository.Delete(ctx, bookId)
@@ -94,7 +95,7 @@ func (service *BookServiceImpl) Delete(ctx context.Context, bookId int) error {
 func (service *BookServiceImpl) FindById(ctx context.Context, bookId int) (web.BookResponse, error) {
 	book, err := service.Repository.FindById(ctx, bookId)
 	if err != nil {
-		return web.BookResponse{}, err
+		return web.BookResponse{}, &exception.NotFoundErr{ErrMessage: "404 Not Fund"}
 	}
 
 	res := web.BookResponse{
@@ -109,7 +110,7 @@ func (service *BookServiceImpl) FindById(ctx context.Context, bookId int) (web.B
 func (service *BookServiceImpl) FindAll(ctx context.Context) ([]web.BookResponse, error) {
 	books, err := service.Repository.FindAll(ctx)
 	if err != nil {
-		return nil, err
+		return []web.BookResponse{}, err
 	}
 
 	bookResponse := []web.BookResponse{}
