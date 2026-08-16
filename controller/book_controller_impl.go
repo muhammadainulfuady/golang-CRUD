@@ -154,6 +154,21 @@ func (controller *BookControllerImpl) Update(w http.ResponseWriter, r *http.Requ
 func (controller *BookControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	idBookStr := params.ByName("idBook")
 	idBook, err := strconv.Atoi(idBookStr)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(
+			web.ApiResponse{
+				Code:    http.StatusBadRequest,
+				Status:  "fail",
+				Message: "ID buku harus berupa angka",
+				Errors:  err.Error(),
+				Data:    nil,
+			},
+		)
+		return
+	}
+
 	err = controller.BookService.Delete(r.Context(), idBook)
 	if notFoundErr, ok := err.(*exception.NotFoundErr); ok {
 		w.Header().Set("Content-Type", "application/json")
@@ -186,6 +201,21 @@ func (controller *BookControllerImpl) Delete(w http.ResponseWriter, r *http.Requ
 func (controller *BookControllerImpl) FindById(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	idBookStr := params.ByName("idBook")
 	idBook, err := strconv.Atoi(idBookStr)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(
+			web.ApiResponse{
+				Code:    http.StatusBadRequest,
+				Status:  "fail",
+				Message: "ID buku harus berupa angka",
+				Errors:  err.Error(),
+				Data:    nil,
+			},
+		)
+		return
+	}
+
 	bookResponse, err := controller.BookService.FindById(r.Context(), idBook)
 	if notFoundErr, ok := err.(*exception.NotFoundErr); ok {
 		w.Header().Set("Content-Type", "application/json")

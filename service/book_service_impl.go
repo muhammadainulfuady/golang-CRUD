@@ -95,7 +95,7 @@ func (service *BookServiceImpl) Delete(ctx context.Context, bookId int) error {
 func (service *BookServiceImpl) FindById(ctx context.Context, bookId int) (web.BookResponse, error) {
 	book, err := service.Repository.FindById(ctx, bookId)
 	if err != nil {
-		return web.BookResponse{}, &exception.NotFoundErr{ErrMessage: "404 Not Fund"}
+		return web.BookResponse{}, &exception.NotFoundErr{ErrMessage: "404 Not Found"}
 	}
 
 	res := web.BookResponse{
